@@ -1,12 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: Pusat Mikroelektronika ITB
-// Engineer: Zulfikar N. Arifuzzaki
-// 
-// Module Name: MUX File
-// Project Name: Optimized Intelligent Traffic Light
-// Target Devices: Board PYNQ-Z1
-// Description: Multiplexer Selector Logics
+// All Multiplexer Selector Logics used for either finding maximum values between 2 , 4 or 8 data
+// Used in determining Policy (Action), Maximum Q-value
 //////////////////////////////////////////////////////////////////////////////////
 
 //module mux2to1_32bit(
