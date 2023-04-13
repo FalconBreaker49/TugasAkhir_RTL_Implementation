@@ -1,12 +1,6 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: Pusat Mikroelektronika ITB
-// Engineer: Zulfikar N. Arifuzzaki
-// 
-// Module Name: Register File
-// Project Name: Optimized Intelligent Traffic Light
-// Target Devices: Board PYNQ-Z1
-// Description: Array Registers Logics
+// List of Array Registers Logics used in most of other hardware blocks
 //////////////////////////////////////////////////////////////////////////////////
 
 module latch_32bit(
