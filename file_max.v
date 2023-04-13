@@ -1,12 +1,6 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: Pusat Mikroelektronika ITB
-// Engineer: Zulfikar N. Arifuzzaki
-// 
-// Module Name: MAX File
-// Project Name: Optimized Intelligent Traffic Light
-// Target Devices: Board PYNQ-Z1
-// Description: Maximum Selector Logics
+// Code for determining Maximum and Minimum Data
 //////////////////////////////////////////////////////////////////////////////////
 
 //module max4to1_2bit(
