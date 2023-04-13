@@ -1,12 +1,6 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: Pusat Mikroelektronika ITB
-// Engineer: Zulfikar N. Arifuzzaki
-// 
-// Module Name: Enablers
-// Project Name: Optimized Intelligent Traffic Light
-// Target Devices: Board PYNQ-Z1
-// Description: Control the signal propagation
+// Enable for the Control Signal
 //////////////////////////////////////////////////////////////////////////////////
 
 //module enabler_1bit(
