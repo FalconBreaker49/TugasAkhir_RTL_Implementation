@@ -1,12 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: Pusat Mikroelektronika ITB
-// Engineer: Zulfikar N. Arifuzzaki
-// 
-// Module Name: Arithmatics File
-// Project Name: Optimized Intelligent Traffic Light
-// Target Devices: Board PYNQ-Z1
-// Description: Basic Arithmatic Logics
+// Basic Arithmatic Logics
+// Implementing the faster multiplication algorithm for computing the Bellman-Equation
 //////////////////////////////////////////////////////////////////////////////////
 
 module multiply(
