@@ -88,49 +88,88 @@ module QA(
     end
     //For maximum Q-value Intersection A 
     wire [31:0] Qmax_A;
-    mux4to1_32bit max0( .in0(Q0_reg0_A),   .in1(Q1_reg0_A),   .in2(Q2_reg0_A),   .in3(Q3_reg0_A),
+    mux4to1_32bit max0_A( .in0(Q0_reg0_A),   .in1(Q1_reg0_A),   .in2(Q2_reg0_A),   .in3(Q3_reg0_A),
                        .sel(Amax_reg0_A),  .out0(Qmax_A)
                         );
     
     wire [31:0] Qsel_A;
-    mux4to1_32bit mux0( .in0(Q0_reg1_A),   .in1(Q1_reg1_A),   .in2(Q2_reg1_A),   .in3(Q3_reg1_A),
+    mux4to1_32bit mux0_A( .in0(Q0_reg1_A),   .in1(Q1_reg1_A),   .in2(Q2_reg1_A),   .in3(Q3_reg1_A),
                        .sel(A_reg0_A),    .out0(Qsel_A)
                         );
+    //For maximum Q-value Intersection B
+    wire [31:0] Qmax_B;
+    mux4to1_32bit max0_B( .in0(Q0_reg0_B),   .in1(Q1_reg0_B),   .in2(Q2_reg0_B),   .in3(Q3_reg0_B),
+                       .sel(Amax_reg0_B),  .out0(Qmax_B)
+                        );
     
-    // REGISTER SELECTED Q-VALUES                    
-    reg [31:0] Qsel_reg0, Qsel_reg1, Qsel_reg2, Qsel_reg3;  
+    wire [31:0] Qsel_B;
+    mux4to1_32bit mux0_B( .in0(Q0_reg1_B),   .in1(Q1_reg1_B),   .in2(Q2_reg1_B),   .in3(Q3_reg1_B),
+                       .sel(A_reg0_B),    .out0(Qsel_B)
+                        );
+    
+    
+    // REGISTER SELECTED Q-VALUES FOR INTERSECTION A                    
+    reg [31:0] Qsel_reg0_A, Qsel_reg1_A, Qsel_reg2_A, Qsel_reg3_A;  
     always @(posedge clk) begin
-        Qsel_reg0 <= Qsel;
-        Qsel_reg1 <= Qsel_reg0;
-        Qsel_reg2 <= Qsel_reg1;
-        Qsel_reg3 <= Qsel_reg2;
+        Qsel_reg0_A <= Qsel_A;
+        Qsel_reg1_A <= Qsel_reg0_A;
+        Qsel_reg2_A <= Qsel_reg1_A;
+        Qsel_reg3_A <= Qsel_reg2_A;
     end              
-    
-    // Bellman Equation : Qnew = Qsel + a(R + g*Qmax' - Qsel)
-    wire [31:0] Gm;
-    reg [31:0] Gm_reg0;
-    multiply mul0(.in0(Qmax), .c(gamma), .out0(Gm));
+    // REGISTER SELECTED Q-VALUES FOR INTERSECTION B                    
+    reg [31:0] Qsel_reg0_B, Qsel_reg1_B, Qsel_reg2_B, Qsel_reg3_B;  
     always @(posedge clk) begin
-        Gm_reg0 <= Gm;
+        Qsel_reg0_B <= Qsel_B;
+        Qsel_reg1_B <= Qsel_reg0_B;
+        Qsel_reg2_B <= Qsel_reg1_B;
+        Qsel_reg3_B <= Qsel_reg2_B;
     end
     
-    wire [31:0] RQ, RQg, Ap;
-    reg [31:0] R_reg0, Ap_reg0;
-    assign RQ  = R_reg0 - Qsel_reg1;
-    assign RQg = RQ + Gm_reg0;
-    reg [31:0] RQg_reg0;
+    
+    
+    // Bellman Equation : Qnew_A = Qsel_a + a(R + g*Qmax_A' - Qsel_A) FOR INTERSECTION A & B
+    //Setup Wires for initial Multiplication
+    wire [31:0] Gm_A, Gm_B;
+    reg [31:0] Gm_reg0_A, Gm_reg0_B;
+    multiply mul0_A(.in0(Qmax_A), .c(gamma), .out0(Gm_A));
+    multiply mul0_B(.in0(Qmax_B), .c(gamma), .out0(Gm_B));
     always @(posedge clk) begin
-        RQg_reg0 <= RQg;
+        Gm_reg0_A <= Gm_A;
+        Gm_reg0_B <= Gm_B;
     end
-    multiply mul1(.in0(RQg_reg0), .c(alpha), .out0(Ap));
+    //Setup Wires for addition with reward and substraction from Temporal Difference
+    wire [31:0] RQ_A, RQg_A, Ap_A;
+    reg [31:0] R_reg0_A, Ap_reg0_A;
+    
+    wire [31:0] RQ_B, RQg_B, Ap_B;
+    reg [31:0] R_reg0_B, Ap_reg0_B;
+    
+    //Arithmetic process
+    assign RQ_A  = R_reg0_A - Qsel_reg1_A;
+    assign RQg_A = RQ_A + Gm_reg0_A;
+    assign RQ_B  = R_reg0_B - Qsel_reg1_B;
+    assign RQg_B = RQ_B + Gm_reg0_B;
+    
+    reg [31:0] RQg_reg0_A, RQg_reg0_B;
     always @(posedge clk) begin
-        Ap_reg0 <= Ap;
+        RQg_reg0_A <= RQg_A;
+        RQg_reg0_B <= RQg_B;
     end
-                    
-    wire [31:0] Qnew_temp0;
-    assign Qnew_temp0 = Ap_reg0 + Qsel_reg3;
+    
+    //Final Arithmetic process
+    multiply mul1_A(.in0(RQg_reg0_A), .c(alpha), .out0(Ap_A));
+    multiply mul1_B(.in0(RQg_reg0_B), .c(alpha), .out0(Ap_B));
     always @(posedge clk) begin
-        Qnew <= Qnew_temp0;
+        Ap_reg0_A <= Ap_A;
+        Ap_reg0_B <= Ap_B;
+    end
+    //Storing the updated Q-values                
+    wire [31:0] Qnew_temp0_A, Qnew_temp0_B;
+    assign Qnew_temp0_A = Ap_reg0_A + Qsel_reg3_A;
+    assign Qnew_temp0_B = Ap_reg0_B + Qsel_reg3_B;
+    always @(posedge clk) begin
+        Qnew_A <= Qnew_temp0_A;
+        Qnew_B <= Qnew_temp0_B;
     end
     
 //    enabler_32bit en(.en(en),
