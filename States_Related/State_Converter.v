@@ -48,18 +48,30 @@ module SD(
 
         end
     end   
-    // Kombinasi aritmatika jika lane tertentu diberikan action? 
-    assign level0 = (A==0)? (L0>>1): 
-                    ((L0!=3'b111)? (L0 + 1'b1):(3'b111));
-    assign level1 = (A==1)? (L1>>1): 
-                    ((L1!=3'b111)? (L1 + 1'b1):(3'b111)); 
-    assign level2 = (A==2)? (L2>>1): 
-                    ((L2!=3'b111)? (L2 + 1'b1):(3'b111));
-    assign level3 = (A==3)? (L3>>1):
-                    ((L3!=3'b111)? (L3 + 1'b1):(3'b111));
+    // Kombinasi aritmatika jika lane tertentu diberikan action untuk Intersection A / Interseciton 1
+    assign level0_A = (A_A==0)? (L0_A>>1): 
+                      ((L0_A!=3'b111)? (L0_A + 1'b1):(3'b111));
+    assign level1_A = (A_A==1)? (L1_A>>1): 
+                      ((L1_A!=3'b111)? (L1_A + 1'b1):(3'b111)); 
+    assign level2_A = (A_A==2)? (L2_A>>1): 
+                      ((L2_A!=3'b111)? (L2_A + 1'b1):(3'b111));
+    assign level3_A = (A_A==3)? (L3_A>>1):
+                      ((L3_A!=3'b111)? (L3_A + 1'b1):(3'b111));
+    // Untuk Intersection B bagian update state traffic nya
+    assign level0_B = (A_B==0)? (L0_B>>1): 
+                      ((L0_B!=3'b111)? (L0_B + 1'b1):(3'b111));
+    assign level1_B = (A_B==1)? (L1_B>>1): 
+                      ((L1_B!=3'b111)? (L1_B + 1'b1):(3'b111)); 
+    assign level2_B = (A_B==2)? (L2_B>>1): 
+                      ((L2_B!=3'b111)? (L2_B + 1'b1):(3'b111));
+    assign level3_B = (A_B==3)? (L3_B>>1):
+                      ((L3_B!=3'b111)? (L3_B + 1'b1):(3'b111));
     
 //    wire [11:0] Stemp;
-    assign S = learning? (((L0)|(L1<<3)|(L2<<6)|(L3<<9))|12'h000) : traffic;
+    //Jika Learning adalah True artinya masih learning sehingga S di assign ke Level0 sampai Level3
+    //Untuk Intersection A
+    assign S_A = learning? (((L0_A)|(L1_A<<3)|(L2_A<<6)|(L3_A<<9))|12'h000) : traffic_A;
+    assign S_B = learning? (((L0_B)|(L1_B<<3)|(L2_B<<6)|(L3_B<<9))|12'h000) : traffic_B;
     
 //    enabler_12bit en0(  .en(en),
 //                        .in0(Stemp),    .out0(S));
