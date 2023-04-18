@@ -7,11 +7,14 @@ module RD(
     // ------------
     input wire clk, rst,
     input wire [31:0] R0, R1, R2,
-    input wire [1:0] Amax, Amin, A,
-    output reg [31:0] R        
+    input wire [1:0] Amax_A, Amin_A, A_A,
+    input wire [1:0] Amax_B, Amin_B, A_B,
+    output reg [31:0] R_A,R_B        
     );
       
-    reg [1:0] Amax_reg0, Amin_reg0;
+    reg [1:0] Amax_reg0_A, Amin_reg0_A;
+    reg [1:0] Amax_reg0_B, Amin_reg0_B;
+    
     always @(posedge clk) begin
         Amax_reg0 <= Amax;
         Amin_reg0 <= Amin;
