@@ -12,6 +12,7 @@ module CU(
     input wire [15:0] max_episode,
     input wire [15:0] seed,
     // Output for Policy Generator 
+    // Changed something here
     output reg Asel_A, Asel_B,
     output reg [1:0] Arand_A,Arand_B
     output reg [11:0] S0_A,S0_B
@@ -33,6 +34,7 @@ module CU(
     );
     
     // State variable for FSM implementation 
+    // Need to check on this later. 
     localparam
         // Preprocessing states
         S_IDLE  = 5'd15,
@@ -58,25 +60,34 @@ module CU(
     // Counter variabel 
     reg [15:0] sc; // step counter
     reg [15:0] ec; // episode counter
-    reg [4:0] ns;
-    reg [4:0] cs;
+    // Belum mengetahui fungsi ns dan cs itu apa. 
+    reg [4:0] ns; //Apakah next state?
+    reg [4:0] cs; //Apakah current state?
     reg [15:0] epsilon;
     // Variables for generating random number 
-    reg  [15:0] i_lsfr;
-    wire [15:0] o_lsfr;
-    lsfr_16bit rand(.in0(i_lsfr), .out0(o_lsfr));
+    // Ini di update untuk A dan B agar mereka seednya tidak selalu sama. Semoga resourcesnya cukup. 
+    reg  [15:0] i_lsfr_a, i_lsfr_b;
+    wire [15:0] o_lsfr_a, o_lsfr_b;
+    
+    //Question: Seed untuk A dan B sama atau beda ya? Efeknya apa ya? 
+    lsfr_16bit rand(.in0(i_lsfr_a), .out0(o_lsfr_a));
+    lsfr_16bit rand(.in0(i_lsfr_b ), .out0(o_lsfr_b));
         
     // LSFR Configuration 
     always@(posedge clk) begin
         case(cs)
             S_IDLE:
-                i_lsfr <= seed;
+                i_lsfr_a <= seed;
+                i_lsfr_b <= seed;
             default:
-                i_lsfr <= o_lsfr;
+                i_lsfr_a <= o_lsfr_a;
+                i_lsfr_b <= o_lsfr_b;
         endcase
     end
     
     // Reset handler
+    // Termasuk logis jika cs == current_state dan ns==next_state
+    // Jika reset == 1 (true) --> current_state di IDLE dan selain itu current_state di set ke next_state. 
     always@(posedge clk) begin 
         if(rst) begin 
             cs <= S_IDLE;
@@ -84,7 +95,7 @@ module CU(
             cs <= ns;
         end
     end
-    
+    //Checking apakah IDLE state atau tidak. 
     always @(posedge clk) begin 
         if (cs == S_IDLE) begin
             idle = 1'b1;
@@ -243,10 +254,15 @@ module CU(
     end
     
     // Random numbers for Policy Generator 
+    // Something changed here
     always @(posedge clk) begin
-        Asel <= (epsilon > o_lsfr[15:0])? 1'b0 : 1'b1;
-        Arand <= o_lsfr[1:0];
-        S0 <= o_lsfr[12:1];
+        Asel_A <= (epsilon > o_lsfr_a[15:0])? 1'b0 : 1'b1;
+        Asel_B <= (epsilon > o_lsfr_b[15:0])? 1'b0 : 1'b1;
+        Arand_A <= o_lsfr_a[1:0];
+        Arand_B <= o_lsfr_b[1:0];
+        
+        S0_A <= o_lsfr_a[12:1];
+        S0_B <= o_lsfr_b[12:1];
     end
   
     
