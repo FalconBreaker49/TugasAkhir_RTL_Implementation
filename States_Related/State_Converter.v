@@ -22,19 +22,33 @@ module SD(
 //    reg [2:0] L0, L1, L2, L3;
 //    wire [2:0] level0, level1, level2, level3;
     always@(posedge clk) begin
+        // Jika Reset == 1 maka dimulai dari initial conditions
         if (rst) begin
-            L0 <= 3'b000;
-            L1 <= 3'b000;
-            L2 <= 3'b000;
-            L3 <= 3'b000;
+            // Initial state untuk intersection A  ?
+            L0_A <= 3'b000;
+            L1_A <= 3'b000;
+            L2_A <= 3'b000;
+            L3_A <= 3'b000;
+            // Initial state untuk intersection B  ?
+            L0_B <= 3'b000;
+            L1_B <= 3'b000;
+            L2_B <= 3'b000;
+            L3_B <= 3'b000;
         end else begin
-            L0 <= level0;
-            L1 <= level1;
-            L2 <= level2;
-            L3 <= level3;
+            // Jika Reset == 0 maka apapun yang ada di output wire dimasukkan ke register.
+            L0_A <= level0_A;
+            L1_A <= level1_A;
+            L2_A <= level2_A;
+            L3_A <= level3_A;
+
+            L0_B <= level0_B;
+            L1_B <= level1_B;
+            L2_B <= level2_B;
+            L3_B <= level3_B;
+
         end
     end   
-    
+    // Kombinasi aritmatika jika lane tertentu diberikan action? 
     assign level0 = (A==0)? (L0>>1): 
                     ((L0!=3'b111)? (L0 + 1'b1):(3'b111));
     assign level1 = (A==1)? (L1>>1): 
