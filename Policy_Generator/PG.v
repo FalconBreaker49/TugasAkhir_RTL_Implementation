@@ -109,19 +109,27 @@ module PG(
     //Bagian sekuensial penentuan action greedy (jika greedy)
     always @(posedge clk)begin
         if (rst) begin
-            Agreed <= 2'd0;
+            Agreed_A <= 2'd0;
+            Agreed_B <= 2'd0;
         end else begin 
-            Agreed <= Amax;
+            Agreed_A <= Amax_A;
+            Agreed_B <= Amax_B;
         end
     end 
-    
-    reg Asel_reg;
-    reg [1:0] Arand_reg;
+    //Bagian sekuensial untuk selection action. 
+    reg Asel_reg_A, Asel_reg_B;
+    reg [1:0] Arand_reg_A, Arand_reg_A;
     always @(posedge clk) begin
-        Asel_reg <= Asel;
-        Arand_reg <= Arand;
+        Asel_reg_A <= Asel_A;
+        Asel_reg_A <= Asel_A;
+        
+        Arand_reg_A <= Arand_A;
+        Arand_reg_B <= Arand_B;
     end
-    assign A = ((Asel_reg)&(learning))? Agreed : Arand_reg;
+    //Assigning kombinasional terakhir untuk menentukan output Action A dan Action B. 
+    // Ditambah learning agar ketika sudah selesai learning selalu mengambil greedy action?
+    assign A_A = ((Asel_reg_A)&(learning))? Agreed_A : Arand_reg_A;
+    assign A_B = ((Asel_reg_B)&(learning))? Agreed_B : Arand_reg_B;
     
 //    wire [1:0] Atemp;
 //    enabler_2bit en0(.en(en),
