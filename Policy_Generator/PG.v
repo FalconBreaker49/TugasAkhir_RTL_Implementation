@@ -3,16 +3,19 @@
 //////////////////////////////////////////////////////////////////////////////////
 // Decide coordinated action based on epsilon-greedy algorithm
 //////////////////////////////////////////////////////////////////////////////////
-
+// Qvalues dari Q-matrix A dan B. Setelah itu, Random Action untuk A dan B. Selected Action (Greedy) A & B.
+// Outputnya memberikan action A dan B
+// Output wire untuk Action Max dan Min A & B belum tau untuk apa. --> Untuk reward based kah?
 module PG(
     input wire clk, rst,
-    input wire [31:0] Q0, Q1, Q2, Q3,
-    input wire [1:0] Arand,
-    input wire Asel,
+    input wire [31:0] Q0_A, Q1_A, Q2_A, Q3_A,
+    input wire [31:0] Q0_B, Q1_B, Q2_B, Q3_B,
+    input wire [1:0] Arand_A,Arand_B,
+    input wire Asel_A, Asel_B
     input wire learning,
-    output wire [1:0] Amax,
-    output wire [1:0] Amin,
-    output wire [1:0] A
+    output wire [1:0] Amax_A, Amax_B
+    output wire [1:0] Amin_A, Amin_B 
+    output wire [1:0] A_A,A_B
     );
        
     wire [31:0] Q_min;                  
