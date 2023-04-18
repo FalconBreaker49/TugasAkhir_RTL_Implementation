@@ -17,17 +17,32 @@ module PG(
     output wire [1:0] Amin_A, Amin_B 
     output wire [1:0] A_A,A_B
     );
-       
-    wire [31:0] Q_min;                  
-    min4to1_32bit min0(.in0(Q0), .in1(Q1), .in2(Q2), .in3(Q3),
-                       .out0(Q_min));
+    // Mencari Q-value minimum dan maximum untuk Q-matrix A
+    wire [31:0] Q_min_A;                  
+    min4to1_32bit min0(.in0(Q0_A), .in1(Q1_A), .in2(Q2_A), .in3(Q3_A),
+                       .out0(Q_min_A));
                       
-    wire [31:0] Q_max;
-    max4to1_32bit max0(.in0(Q0), .in1(Q1), .in2(Q2), .in3(Q3),
-                       .out0(Q_max));
+    wire [31:0] Q_max_A;
+    max4to1_32bit max0(.in0(Q0_A), .in1(Q1_A), .in2(Q2_A), .in3(Q3_A),
+                       .out0(Q_max_A));
     
-    reg [31:0] Q_min_reg0, Q_max_reg0;
-    reg [11:0] Stest;                  
+    
+    // Mencari Q-value minimum dan maximum untuk Q-matrix B
+    wire [31:0] Q_min_B;                  
+    min4to1_32bit min1(.in0(Q0_B), .in1(Q1_B), .in2(Q2_B), .in3(Q3_B),
+                       .out0(Q_min_B));
+                      
+    wire [31:0] Q_max_B;
+    max4to1_32bit max1(.in0(Q0_B), .in1(Q1_B), .in2(Q2_B), .in3(Q3_B),
+                       .out0(Q_max_B));
+    
+    
+    //Register untuk menyimpan sementara? Untuk bagian sekuensial.
+    reg [31:0] Q_min_reg0_A, Q_max_reg0_A;
+    reg [31:0] Q_min_reg0_B, Q_max_reg0_B;
+    reg [11:0] Stest_A,Stest_B; //State penguji untuk intersection A dan B
+    
+    
     always @(posedge clk) begin
         if(rst)begin
             Q_min_reg0 <= 32'd0;
