@@ -41,26 +41,49 @@ module PG(
     reg [31:0] Q_min_reg0_A, Q_max_reg0_A;
     reg [31:0] Q_min_reg0_B, Q_max_reg0_B;
     reg [11:0] Stest_A,Stest_B; //State penguji untuk intersection A dan B
-    
-    
+    //Belum bikin deklarasi register penyimpan sementara Q0 sampai Q3 untuk A dan B 
+    reg [31:0] Q0_reg0_A,Q1_reg0_A,Q2_reg0_A,Q3_reg0_A; 
+    reg [31:0] Q0_reg0_B,Q1_reg0_B,Q2_reg0_B,Q3_reg0_B;
+    //Bagian Sekuensial 
     always @(posedge clk) begin
+        // Jika reset == 1 (true) maka inisialisasi semua nilai ke 0
         if(rst)begin
-            Q_min_reg0 <= 32'd0;
-            Q_max_reg0 <= 32'd0;
-            Q0_reg0 <= 32'd0;
-            Q1_reg0 <= 32'd0;
-            Q2_reg0 <= 32'd0;
-            Q3_reg0 <= 32'd0;
+            // Untuk yang berhubungan dengan Intersection A
+            Q_min_reg0_A <= 32'd0;
+            Q_max_reg0_A <= 32'd0;
+            Q0_reg0_A <= 32'd0;
+            Q1_reg0_A <= 32'd0;
+            Q2_reg0_A <= 32'd0;
+            Q3_reg0_A <= 32'd0;
+            
+            // Untuk yang berhubungan dengan Intersection A
+            Q_min_reg0_B <= 32'd0;
+            Q_max_reg0_B <= 32'd0;
+            Q0_reg0_B <= 32'd0;
+            Q1_reg0_B <= 32'd0;
+            Q2_reg0_B <= 32'd0;
+            Q3_reg0_B <= 32'd0;
+            
         end else begin
-            Q_min_reg0 <= Q_min;
-            Q_max_reg0 <= Q_max;
-            Q0_reg0 <= Q0;
-            Q1_reg0 <= Q1;
-            Q2_reg0 <= Q2;
-            Q3_reg0 <= Q3;
+            //Jika bukan reset (bukan kondisi awal) 
+            Q_min_reg0_A <= Q_min_A;
+            Q_max_reg0_A <= Q_max_A;
+            Q0_reg0_A <= Q0_A;
+            Q1_reg0_A <= Q1_A;
+            Q2_reg0_A <= Q2_A;
+            Q3_reg0_A <= Q3_A;
+            
+            Q_min_reg0_B <= Q_min_B;
+            Q_max_reg0_B <= Q_max_B;
+            Q0_reg0_B <= Q0_B;
+            Q1_reg0_B <= Q1_B;
+            Q2_reg0_B <= Q2_B;
+            Q3_reg0_B <= Q3_B;
         end
     end
     
+    
+    //Bagian Kombinasional
     assign Amin = (Q0_reg0 == Q_min_reg0)? 2'd0:
                   (Q1_reg0 == Q_min_reg0)? 2'd1: 
                   (Q2_reg0 == Q_min_reg0)? 2'd2: 2'd3;
