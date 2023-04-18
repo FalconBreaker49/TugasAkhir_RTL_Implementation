@@ -84,16 +84,29 @@ module PG(
     
     
     //Bagian Kombinasional
-    assign Amin = (Q0_reg0 == Q_min_reg0)? 2'd0:
-                  (Q1_reg0 == Q_min_reg0)? 2'd1: 
-                  (Q2_reg0 == Q_min_reg0)? 2'd2: 2'd3;
+    //Menentukan minimum Action berdasarkan Q-value minimum dan Maximum Action berdasarkan Q-value maximum? 
+    assign Amin_A = (Q0_reg0_A == Q_min_reg0_A)? 2'd0:
+                  (Q1_reg0_A == Q_min_reg0_A)? 2'd1: 
+                  (Q2_reg0_A == Q_min_reg0_A)? 2'd2: 2'd3;
     
 
-    assign Amax = (Q0_reg0 == Q_max_reg0)? 2'd0:
-                  (Q1_reg0 == Q_max_reg0)? 2'd1: 
-                  (Q2_reg0 == Q_max_reg0)? 2'd2: 2'd3;
+    assign Amax_A = (Q0_reg0_A == Q_max_reg0_A)? 2'd0:
+                  (Q1_reg0_A == Q_max_reg0_A)? 2'd1: 
+                  (Q2_reg0_A == Q_max_reg0_A)? 2'd2: 2'd3;
     
-    reg [1:0] Agreed;
+    
+    assign Amin_B = (Q0_reg0_B == Q_min_reg0_B)? 2'd0:
+                    (Q1_reg0_B == Q_min_reg0_B)? 2'd1: 
+                    (Q2_reg0_B == Q_min_reg0_B)? 2'd2: 2'd3;
+    
+
+    assign Amax_B = (Q0_reg0_B == Q_max_reg0_B)? 2'd0:
+                    (Q1_reg0_B == Q_max_reg0_B)? 2'd1: 
+                    (Q2_reg0_B == Q_max_reg0_B)? 2'd2: 2'd3;
+    
+    reg [1:0] Agreed_A,Agreed_B; // Untuk greedy action A dan B
+    
+    //Bagian sekuensial penentuan action greedy (jika greedy)
     always @(posedge clk)begin
         if (rst) begin
             Agreed <= 2'd0;
