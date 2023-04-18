@@ -12,9 +12,9 @@ module CU(
     input wire [15:0] max_episode,
     input wire [15:0] seed,
     // Output for Policy Generator 
-    output reg Asel,
-    output reg [1:0] Arand,
-    output reg [11:0] S0,
+    output reg Asel_A, Asel_B,
+    output reg [1:0] Arand_A,Arand_B
+    output reg [11:0] S0_A,S0_B
     // Control Signal
     output wire PG,
     output wire QA,
